@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rick and Morty Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#202329;
+}
+
+h1{
+    color:white;
+    text-align:center;
+    padding:25px;
+}
+
+.container{
+    width:95%;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+    padding-bottom:30px;
+}
+
+.card{
+    background:#3c3e44;
+    color:white;
+    border-radius:10px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:scale(1.03);
+}
+
+.card img{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+}
+
+.content{
+    padding:15px;
+}
+
+.content h2{
+    margin-bottom:10px;
+}
+
+.content p{
+    margin:8px 0;
+}
+
+.status{
+    font-weight:bold;
+}
+
+.alive{
+    color:lime;
+}
+
+.dead{
+    color:red;
+}
+
+.unknown{
+    color:orange;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>👽 Rick and Morty Characters</h1>
+
+<div class="container" id="characters"></div>
+
+<script>
+
+fetch("https://rickandmortyapi.com/api/character")
+.then(response=>response.json())
+.then(data=>{
+
+    const container=document.getElementById("characters");
+
+    data.results.forEach(character=>{
+
+        let statusClass="";
+
+        if(character.status==="Alive")
+            statusClass="alive";
+        else if(character.status==="Dead")
+            statusClass="dead";
+        else
+            statusClass="unknown";
+
+        container.innerHTML += `
+
+        <div class="card">
+
+            <img src="${character.image}" alt="${character.name}">
+
+            <div class="content">
+
+                <h2>${character.name}</h2>
+
+                <p><strong>Status:</strong>
+                <span class="${statusClass}">
+                ${character.status}
+                </span>
+                </p>
+
+                <p><strong>Species:</strong> ${character.species}</p>
+
+                <p><strong>Gender:</strong> ${character.gender}</p>
+
+                <p><strong>Origin:</strong> ${character.origin.name}</p>
+
+                <p><strong>Location:</strong> ${character.location.name}</p>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+})
+.catch(error=>{
+
+    console.log(error);
+
+    document.body.innerHTML += "<h2 style='color:red;text-align:center'>Failed to load data.</h2>";
+
+});
+
+</script>
+
+</body>
+</html>
